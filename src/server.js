@@ -1,5 +1,5 @@
 const express = require('express');
-const session = require('express-session');
+const cookieSession = require('cookie-session');
 const csrf = require('csurf');
 const path = require('path');
 const methodOverride = require('method-override');
@@ -18,11 +18,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '..', 'public')));
-app.use(session({
-  secret: 'absensi-supi-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production' }
+app.use(cookieSession({
+  name: 'session',
+  keys: [process.env.SESSION_SECRET || 'absensi-supi-secret'],
+  maxAge: 24 * 60 * 60 * 1000,
+  httpOnly: true,
+  sameSite: 'lax',
+  secure: process.env.NODE_ENV === 'production'
 }));
 const csrfProtection = process.env.DISABLE_CSRF === 'true' ? ((req, res, next) => next()) : csrf();
 app.use(csrfProtection);
@@ -105,7 +107,8 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-  req.session.destroy(() => res.redirect('/login'));
+  req.session = null;
+  res.redirect('/login');
 });
 
 app.get('/admin', ensureAuth, ensureRole('ADMIN'), async (req, res) => {
@@ -326,7 +329,12 @@ app.post('/guru/absensi', ensureAuth, ensureRole('GURU'), asyncHandler(async (re
         `, [sid, req.session.user.id, d, status, sick_date, izin_start_date, izin_days, izin_reason, dayjs().toISOString()]);
       }
     }
-    await run('INSERT OR REPLACE INTO teacher_attendance_status (teacher_id, date, status) VALUES (?, ?, ?)', [req.session.user.id, d, 'DONE']);
+    const tstatus = await get('SELECT id FROM teacher_attendance_status WHERE teacher_id=? AND date=?', [req.session.user.id, d]);
+    if (tstatus) {
+      await run('UPDATE teacher_attendance_status SET status=? WHERE id=?', ['DONE', tstatus.id]);
+    } else {
+      await run('INSERT INTO teacher_attendance_status (teacher_id, date, status) VALUES (?, ?, ?)', [req.session.user.id, d, 'DONE']);
+    }
     await run('COMMIT');
   } catch (e) {
     await run('ROLLBACK');
@@ -365,6 +373,9 @@ app.post('/guru/akun/password', ensureAuth, ensureRole('GURU'), asyncHandler(asy
 app.get('/health', (req, res) => res.json({ ok: true }));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log('Server running on http://localhost:' + PORT);
-});
+if (require.main === module) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log('Server running on http://localhost:' + PORT);
+  });
+}
+module.exports = app;

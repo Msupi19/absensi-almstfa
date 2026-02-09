@@ -4,6 +4,9 @@
   "private": true,
   "description": "Website absensi sekolah berbasis web dengan role Admin & Guru",
   "main": "src/server.js",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "node src/server.js"
@@ -14,8 +17,10 @@
     "dayjs": "^1.11.10",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
-    "express-session": "^1.17.3",
+    "cookie-session": "^2.0.0",
+    "serverless-http": "^3.2.0",
     "method-override": "^3.0.0",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "pg": "^8.11.3"
   }
 }
