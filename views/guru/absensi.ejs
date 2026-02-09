@@ -1,0 +1,55 @@
+<%- include('../partials/_top', { title: 'Absensi Siswa' }) %>
+  <h2>Absensi Siswa</h2>
+  <form method="get" action="/guru/absensi" class="actions" style="margin-bottom:8px;">
+    <input class="input" type="date" name="date" value="<%= date %>">
+    <button class="btn secondary" type="submit">Tampilkan</button>
+  </form>
+  <form method="post" action="/guru/absensi">
+    <input type="hidden" name="date" value="<%= date %>">
+    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+    <div class="responsive">
+      <table class="table">
+        <thead><tr><th>Nama</th><th>Kelas</th><th>Status</th><th>Detail</th></tr></thead>
+        <tbody>
+          <% students.forEach(s => { const a = existingMap[s.id]; %>
+            <tr>
+              <td><%= s.name %></td>
+              <td>Kelas <%= s.class_level %></td>
+              <td>
+                <select class="input" name="status_<%= s.id %>">
+                  <option value="HADIR" <%= a && a.status==='HADIR' ? 'selected' : '' %>>Hadir</option>
+                  <option value="SAKIT" <%= a && a.status==='SAKIT' ? 'selected' : '' %>>Sakit</option>
+                  <option value="IZIN" <%= a && a.status==='IZIN' ? 'selected' : '' %>>Izin</option>
+                </select>
+              </td>
+              <td>
+                <div class="grid cols-2">
+                  <div>
+                    <label class="muted">Tanggal Sakit</label>
+                    <input class="input" type="date" name="sick_date_<%= s.id %>" value="<%= a ? (a.sick_date || '') : '' %>">
+                  </div>
+                  <div>
+                    <label class="muted">Mulai Izin</label>
+                    <input class="input" type="date" name="izin_start_date_<%= s.id %>" value="<%= a ? (a.izin_start_date || '') : '' %>">
+                  </div>
+                  <div>
+                    <label class="muted">Lama Izin (hari)</label>
+                    <input class="input" type="number" min="1" name="izin_days_<%= s.id %>" value="<%= a ? (a.izin_days || '') : '' %>">
+                  </div>
+                  <div>
+                    <label class="muted">Alasan/Kegiatan</label>
+                    <input class="input" name="izin_reason_<%= s.id %>" value="<%= a ? (a.izin_reason || '') : '' %>">
+                  </div>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <div class="sticky-actions actions">
+      <button class="btn" type="submit">Simpan Absensi</button>
+      <a class="btn outline" href="/guru/absensi?date=<%= date %>">Batal</a>
+    </div>
+  </form>
+<%- include('../partials/_bottom') %>

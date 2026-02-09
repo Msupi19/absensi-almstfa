@@ -1,0 +1,28 @@
+<%- include('../partials/_top', { title: 'Monitoring Absensi Guru' }) %>
+  <h2>Monitoring Absensi Guru</h2>
+  <form method="get" action="/admin/monitoring" class="actions" style="margin-bottom:8px;">
+    <input class="input" type="date" name="date" value="<%= date %>">
+    <button class="btn secondary" type="submit">Tampilkan</button>
+    <a class="btn outline" href="/admin/export/absensi?date=<%= date %>">Ekspor CSV</a>
+  </form>
+  <div class="responsive">
+    <table class="table">
+      <thead><tr><th>Guru</th><th>Status</th><th>Keterangan</th></tr></thead>
+      <tbody>
+        <% result.forEach(r => { %>
+          <tr>
+            <td><%= r.teacher.name %></td>
+            <td>
+              <% if (r.done) { %>
+                <span class="status-pill status-done">Sudah Absen</span>
+              <% } else { %>
+                <span class="status-pill status-miss">Belum Absen</span>
+              <% } %>
+            </td>
+            <td><%= r.reason || '-' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<%- include('../partials/_bottom') %>

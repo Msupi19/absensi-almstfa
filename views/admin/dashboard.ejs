@@ -1,0 +1,15 @@
+<%- include('../partials/_top', { title: 'Dashboard Admin' }) %>
+  <h2>Dashboard Admin</h2>
+  <div class="grid cols-2">
+    <div class="container">
+      <h3>Ringkasan</h3>
+      <p>Jumlah Guru Aktif: <strong><%= teacherCount %></strong></p>
+      <p>Total Siswa: <strong><%= studentCount %></strong></p>
+      <div class="actions">
+        <a class="btn" href="/admin/guru">Kelola Guru</a>
+        <a class="btn secondary" href="/admin/siswa">Data Siswa</a>
+        <a class="btn" href="/admin/monitoring">Monitoring Absensi Guru</a>
+      </div>
+    </div>
+  </div>
+<%- include('../partials/_bottom') %>

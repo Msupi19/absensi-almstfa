@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Absensi Sekolah' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1f6feb">
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <div><strong>Absensi Sekolah</strong></div>
+      <div>
+        <% if (user) { %>
+          <span class="muted"><%= user.name %> (<%= user.role %>)</span>
+          <form action="/logout" method="post" style="display:inline;">
+            <input type="hidden" name="_csrf" value="<%= _csrf %>">
+            <button class="btn secondary" type="submit">Logout</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </header>
+  <% if (user) { %>
+    <div class="nav">
+      <div class="container">
+        <% if (user.role === 'ADMIN') { %>
+          <a href="/admin" class="<%= (title||'').includes('Admin') ? 'active' : '' %>">Dashboard</a>
+          <a href="/admin/guru">Kelola Guru</a>
+          <a href="/admin/siswa">Data Siswa</a>
+          <a href="/admin/monitoring">Monitoring Absensi Guru</a>
+          <a href="/admin/rekap-siswa">Rekap Siswa</a>
+        <% } else { %>
+          <a href="/guru" class="<%= (title||'').includes('Guru') ? 'active' : '' %>">Dashboard</a>
+          <a href="/guru/siswa">Kelola Siswa</a>
+          <a href="/guru/absensi">Absensi Siswa</a>
+          <a href="/guru/akun">Pengaturan Akun</a>
+        <% } %>
+      </div>
+    </div>
+  <% } %>
+  <main>
+    <div class="container">
+      <% if (flash && flash.message) { %>
+        <div class="alert <%= flash.type === 'error' ? 'error' : 'success' %>"><%= flash.message %></div>
+      <% } %>

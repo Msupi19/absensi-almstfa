@@ -1,0 +1,8 @@
+{
+  "name": "Absensi Sekolah",
+  "short_name": "Absensi",
+  "start_url": "/login",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f6feb"
+}

@@ -1,0 +1,37 @@
+<%- include('../partials/_top', { title: 'Rekap Siswa' }) %>
+  <h2>Rekap Absensi Siswa</h2>
+  <form method="get" action="/admin/rekap-siswa" class="actions" style="margin-bottom:8px;">
+    <input class="input" type="date" name="date" value="<%= date %>">
+    <select class="input" name="class_level">
+      <option value="" <%= !class_level ? 'selected' : '' %>>Semua Kelas</option>
+      <option value="7" <%= class_level==7 ? 'selected' : '' %>>Kelas 7</option>
+      <option value="8" <%= class_level==8 ? 'selected' : '' %>>Kelas 8</option>
+      <option value="9" <%= class_level==9 ? 'selected' : '' %>>Kelas 9</option>
+    </select>
+    <button class="btn secondary" type="submit">Tampilkan</button>
+  </form>
+  <div class="responsive">
+    <table class="table">
+      <thead><tr><th>Siswa</th><th>Kelas</th><th>Guru</th><th>Status</th><th>Detail</th></tr></thead>
+      <tbody>
+        <% rows.forEach(r => { %>
+          <tr>
+            <td><%= r.siswa %></td>
+            <td>Kelas <%= r.kelas %></td>
+            <td><%= r.guru %></td>
+            <td>
+              <% if (r.status === 'HADIR') { %>
+                <span class="status-pill status-done">Hadir</span>
+              <% } else if (r.status === 'Belum Diinput') { %>
+                <span class="status-pill status-miss">Belum Diinput</span>
+              <% } else { %>
+                <span class="status-pill status-miss"><%= r.status %></span>
+              <% } %>
+            </td>
+            <td><%= r.detail || '-' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<%- include('../partials/_bottom') %>

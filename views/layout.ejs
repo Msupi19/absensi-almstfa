@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Absensi Sekolah' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <div>
+        <strong>Absensi Sekolah</strong>
+      </div>
+      <div>
+        <% if (user) { %>
+          <span class="muted"><%= user.name %> (<%= user.role %>)</span>
+          <form action="/logout" method="post" style="display:inline;">
+            <button class="btn secondary" type="submit">Logout</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <%- body %>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<%- include('../partials/_top', { title: 'Pengaturan Akun' }) %>
+  <h2>Pengaturan Akun Guru</h2>
+  <% if (error) { %>
+    <div style="background:#fde2e4;color:#b02a37;padding:8px;border-radius:6px;margin-bottom:8px;"><%= error %></div>
+  <% } %>
+  <% if (success) { %>
+    <div style="background:#e2f0d9;color:#1e7e34;padding:8px;border-radius:6px;margin-bottom:8px;"><%= success %></div>
+  <% } %>
+  <form method="post" action="/guru/akun/password">
+    <div class="form-row"><label>Password Lama</label><input class="input" name="old_password" type="password" required></div>
+    <div class="form-row"><label>Password Baru</label><input class="input" name="new_password" type="password" required></div>
+    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+    <div class="actions"><button class="btn" type="submit">Ganti Password</button></div>
+  </form>
+  <p class="muted">Anda tidak dapat mengubah role atau menghapus akun.</p>
+<%- include('../partials/_bottom') %>

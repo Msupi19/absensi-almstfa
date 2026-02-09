@@ -1,0 +1,50 @@
+<%- include('../partials/_top', { title: 'Manajemen Siswa' }) %>
+  <h2>Manajemen Siswa</h2>
+  <div class="grid cols-2">
+    <div>
+      <h3>Tambah Siswa</h3>
+      <form method="post" action="/guru/siswa">
+        <div class="form-row"><label>Nama Siswa</label><input class="input" name="name" required></div>
+        <div class="form-row"><label>Kelas</label>
+          <select class="input" name="class_level" required>
+            <option value="7">Kelas 7</option>
+            <option value="8">Kelas 8</option>
+            <option value="9">Kelas 9</option>
+          </select>
+        </div>
+        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+        <div class="actions"><button class="btn" type="submit">Tambah</button></div>
+      </form>
+    </div>
+    <div class="responsive">
+      <h3>Daftar Siswa</h3>
+      <form method="get" action="/guru/siswa" class="actions" style="margin-bottom:8px;">
+        <select class="input" name="class_level">
+          <option value="">Semua Kelas</option>
+          <option value="7" <%= (typeof class_level !== 'undefined' && class_level==7) ? 'selected' : '' %>>Kelas 7</option>
+          <option value="8" <%= (typeof class_level !== 'undefined' && class_level==8) ? 'selected' : '' %>>Kelas 8</option>
+          <option value="9" <%= (typeof class_level !== 'undefined' && class_level==9) ? 'selected' : '' %>>Kelas 9</option>
+        </select>
+        <button class="btn secondary" type="submit">Filter</button>
+      </form>
+      <table class="table">
+        <thead><tr><th>Nama</th><th>Kelas</th><th>Status</th><th>Aksi</th></tr></thead>
+        <tbody>
+          <% students.forEach(s => { %>
+            <tr>
+              <td><%= s.name %></td>
+              <td>Kelas <%= s.class_level %></td>
+              <td><%= s.active ? 'Aktif' : 'Nonaktif' %></td>
+              <td class="actions">
+                <form method="post" action="/guru/siswa/<%= s.id %>/toggle">
+                  <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                  <button class="btn secondary" type="submit"><%= s.active ? 'Nonaktifkan' : 'Aktifkan' %></button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<%- include('../partials/_bottom') %>

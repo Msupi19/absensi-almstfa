@@ -1,0 +1,18 @@
+<%- include('../partials/_top', { title: 'Data Siswa' }) %>
+  <h2>Data Siswa</h2>
+  <div class="responsive">
+    <table class="table">
+      <thead><tr><th>Nama</th><th>Kelas</th><th>Status</th><th>Guru</th></tr></thead>
+      <tbody>
+        <% students.forEach(s => { %>
+          <tr>
+            <td><%= s.name %></td>
+            <td>Kelas <%= s.class_level %></td>
+            <td><%= s.active ? 'Aktif' : 'Nonaktif' %></td>
+            <td><%= s.teacher_name || '-' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<%- include('../partials/_bottom') %>

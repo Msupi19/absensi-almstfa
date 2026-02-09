@@ -1,0 +1,48 @@
+<%- include('../partials/_top', { title: 'Kelola Guru' }) %>
+  <h2>Kelola Guru</h2>
+  <div class="grid cols-2">
+    <div>
+      <h3>Tambah Akun Guru</h3>
+      <form method="post" action="/admin/guru">
+        <div class="form-row"><label>Nama</label><input class="input" name="name" required></div>
+        <div class="form-row"><label>Email</label><input class="input" name="email"></div>
+        <div class="form-row"><label>Username</label><input class="input" name="username" required></div>
+        <div class="form-row"><label>Mata Pelajaran</label><input class="input" name="subject"></div>
+        <div class="form-row"><label>Password Awal</label><input class="input" type="password" name="password" required></div>
+        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+        <div class="actions"><button class="btn" type="submit">Tambah</button></div>
+      </form>
+    </div>
+    <div class="responsive">
+      <h3>Daftar Guru</h3>
+      <table class="table">
+        <thead><tr><th>Nama</th><th>Username</th><th>Email</th><th>Mapel</th><th>Status</th><th>Aksi</th></tr></thead>
+        <tbody>
+          <% gurus.forEach(g => { %>
+            <tr>
+              <td><%= g.name %></td>
+              <td><%= g.username %></td>
+              <td><%= g.email || '-' %></td>
+              <td><%= g.subject || '-' %></td>
+              <td><%= g.active ? 'Aktif' : 'Nonaktif' %></td>
+              <td class="actions">
+                <form method="post" action="/admin/guru/<%= g.id %>">
+                  <input type="hidden" name="name" value="<%= g.name %>">
+                  <input type="hidden" name="email" value="<%= g.email %>">
+                  <input type="hidden" name="username" value="<%= g.username %>">
+                  <input type="hidden" name="subject" value="<%= g.subject %>">
+                  <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                  <button class="btn secondary" type="submit">Simpan</button>
+                </form>
+                <form method="post" action="/admin/guru/<%= g.id %>/toggle">
+                  <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                  <button class="btn danger" type="submit"><%= g.active ? 'Nonaktifkan' : 'Aktifkan' %></button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<%- include('../partials/_bottom') %>

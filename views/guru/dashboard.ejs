@@ -1,0 +1,32 @@
+<%- include('../partials/_top', { title: 'Dashboard Guru' }) %>
+  <h2>Dashboard Guru</h2>
+  <p>Hari ini: <strong><%= today %></strong></p>
+  <p>Jumlah Siswa Aktif: <strong><%= studentsCount %></strong></p>
+  <div>
+    <h3>Status Absensi Hari Ini</h3>
+    <form method="post" action="/guru/status" class="grid cols-2">
+      <div>
+        <div class="form-row">
+          <label>Status</label>
+          <select class="input" name="status">
+            <option value="DONE" <%= status && status.status==='DONE' ? 'selected' : '' %>>Sudah Absen</option>
+            <option value="NOT_DONE" <%= status && status.status==='NOT_DONE' ? 'selected' : '' %>>Belum Absen</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Alasan (jika belum)</label>
+          <input class="input" name="reason" value="<%= status ? (status.reason || '') : '' %>">
+        </div>
+        <input type="hidden" name="date" value="<%= today %>">
+        <div class="actions"><button class="btn" type="submit">Simpan Status</button></div>
+      </div>
+      <div>
+        <div class="actions">
+          <a class="btn" href="/guru/absensi?date=<%= today %>">Input Absensi Siswa</a>
+          <a class="btn secondary" href="/guru/siswa">Kelola Siswa</a>
+          <a class="btn secondary" href="/guru/akun">Pengaturan Akun</a>
+        </div>
+      </div>
+    </form>
+  </div>
+<%- include('../partials/_bottom') %>
